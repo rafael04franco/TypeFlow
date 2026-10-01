@@ -1,3 +1,4 @@
+# Requer Python 3.10 ou superior.
 customtkinter
 ruamel.yaml
 Pillow
