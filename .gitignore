@@ -1,0 +1,13 @@
+# Executáveis e compilação
+*.exe
+build/
+dist/
+*.spec
+
+# Logs e configurações locais da máquina
+*.log
+config.json
+
+# Cache do Python
+__pycache__/
+*.pyc
