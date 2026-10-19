@@ -18,8 +18,11 @@
    ```
 3. Execute o aplicativo:
    ```bash
-   python appespanso_modern.py
+   python main.py
    ```
 
 ## ⚠️ Disclaimer
 Este é um projeto não-oficial e open-source, criado para auxiliar a comunidade.
+
+## ⚠️ Aviso sobre o Windows Defender (SmartScreen)
+Como este é um projeto open-source e independente, o executável não possui um certificado digital comercial. O Windows pode exibir uma tela azul de proteção na primeira execução. **Para abrir:** Clique em `Mais informações` e depois em `Executar assim mesmo`.
