@@ -50,6 +50,7 @@ def carregar_configuracao() -> dict[str, str]:
         ValueError: Se o arquivo existir, mas não contiver um caminho válido.
         OSError: Se não for possível criar ou ler o arquivo de configuração.
     """
+    # 1. Se o arquivo não existe, cria com o padrão da máquina atual
     if not os.path.exists(CAMINHO_CONFIGURACAO):
         configuracao = {"espanso_match_dir": CAMINHO_ESPANSO_PADRAO}
         with open(CAMINHO_CONFIGURACAO, "w", encoding="utf-8") as arquivo:
@@ -57,6 +58,7 @@ def carregar_configuracao() -> dict[str, str]:
         logger.info("Arquivo de configuração criado: %s", CAMINHO_CONFIGURACAO)
         return configuracao
 
+    # 2. Se existe, lê o conteúdo
     with open(CAMINHO_CONFIGURACAO, "r", encoding="utf-8") as arquivo:
         configuracao = json.load(arquivo)
 
@@ -65,7 +67,19 @@ def carregar_configuracao() -> dict[str, str]:
         raise ValueError(
             "A configuração 'espanso_match_dir' deve conter um caminho válido."
         )
-    return {"espanso_match_dir": os.path.expandvars(diretorio.strip())}
+        
+    caminho_expandido = os.path.expandvars(diretorio.strip())
+    
+    # 3. CORREÇÃO: Verifica se a pasta base salva no config realmente existe neste PC.
+    # Se não existir (ex: mudou de máquina), força a atualização para o caminho padrão atual.
+    if not os.path.exists(os.path.dirname(caminho_expandido)):
+        configuracao["espanso_match_dir"] = CAMINHO_ESPANSO_PADRAO
+        with open(CAMINHO_CONFIGURACAO, "w", encoding="utf-8") as arquivo:
+            json.dump(configuracao, arquivo, indent=2, ensure_ascii=False)
+        logger.info("Caminho desatualizado detectado. Atualizado para: %s", CAMINHO_ESPANSO_PADRAO)
+        return {"espanso_match_dir": CAMINHO_ESPANSO_PADRAO}
+
+    return {"espanso_match_dir": caminho_expandido}
 
 # --- GERENCIADOR DE DADOS (BACKEND) ---
 class MacroManager:
